@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>Guessing Game</title>
+<script>
+
+
+    do {
+     var fname=prompt("Hello, what's your first name?")// code block to be executed
+}
+while (fname=="");
+ 
+var res=fname.charAt(0).toUpperCase() + fname.slice(1); //sets variable res to lower case version of fname.
+	
+alert("Hi, " +res+"!");
+   
+	 
+var answer, score, scoreList, res; //these are global, they can be used by any function
+
+	function doDate()
+{
+    var str = "";
+
+    var days = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+    var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+
+    var now = new Date();
+
+    str += days[now.getDay()] + ", " + now.getDate() + " " + months[now.getMonth()] + " " + now.getFullYear() + " " + now.getHours() +":" + now.getMinutes() + ":" + now.getSeconds();
+    document.getElementById("todaysDate").innerHTML = "Today's date and time:" + " " + str;
+}
+
+setInterval(doDate, 1000); //https://stackoverflow.com/questions/26584233/updating-javascript-time-every-second
+
+
+
+ function startGame()//this initialized stuff when the page is loaded or the reset stats button is clicked
+{
+	resetGame();
+	scoreList =[];//to be implemented: saves ALL scores of completed/quit games 
+	document.getElementById("currentScore").innerHTML = "Current Score: " + score;
+	document.getElementById("guess").value = "Enter your guess!";
+	document.getElementById("gamemsg2").innerHTML = ""; 
+	document.getElementById("msg3").innerHTML = "";
+	
+	}
+
+function resetGame()//this generates a new answer and sets the score back to 0 when the user guess the right number
+{
+	document.getElementById("gameMsg").innerHTML = "Hi" + res+"!" + " Guess a number between 1-100";
+	//answer = Math.floor(Math.random()*100)+1;
+	score = 0;
+	answer=27; 
+
+}
+function playGame()
+{
+	var msg2=document.getElementById("gamemsg2");
+	var msg = document.getElementById("gameMsg");//so you don't have to write this whole line every time
+	var guess = parseInt(document.getElementById("guess").value);
+	if(!(guess >= 1 && guess <= 100))
+	{
+		if(guess.toString() == "NaN")
+			guess = "A non-numeric character";
+		msg.innerHTML = "Sorry" + res + "," guess + " is invaild, but won't hurt your score! Guess a # 1-100";
+		return;
+	}
+	score++;
+	
+	var di= Math.abs(guess-answer);
+	
+	if (di <= 5) 
+	{ 
+	gamemsg2.innerHTML= res +"!"+" You're on <font color=red>fire!</font>" 
+	} 
+	
+	else if (5<di&&di<=15) 
+	{ 
+	gamemsg2.innerHTML=res+","+"<font color=gold>maybe you can get even closer...?</font>"
+	}
+	
+	else if(25<=di&&di<=40)
+	{ 
+	gamemsg2.innerHTML="Whew..you are kinda <font color=cyan>cold</font> there,"+ " " + res + "!"
+	}
+	
+	else if(di>40) 
+	{
+	gamemsg2.innerHTML=res+"!"+"You are <font color=darkblue>FRRROZEN.</font>."
+	}
+	if(guess < answer)
+	{
+		msg.innerHTML = res +"," + " " + guess + " is too low. guess again.";
+	}
+	else if(guess > answer)
+	{ 
+		msg.innerHTML = res+ ","+" "+guess + " is too high, guess again";
+	}
+	else
+	{
+		alert(res+"!"+" " +answer + " is correct! It took " + score + " tries.");
+		//to be implemented: tell the user if they have a new best score
+		//bonus: tell them what their rank out of all scores
+		scoreList.push(score);//adds the current score to the scoreList
+		updateAvg();
+		updateScores();
+		document.getElementById("guess").value = "Enter a # to play again";
+		document.getElementById("gamemsg2").innerHTML = "";
+		document.getElementById("msg3").innerHTML = "";
+		resetGame();
+	}
+	document.getElementById("currentScore").innerHTML = "Current Score: " + score	
+
+	if (score<=5) 
+		{
+			msg3.innerHTML = "Hey" +res +"!"+" Really good score there, <font color=light green> young grasshopper </font>";
+		} 
+	
+	else if (score>5&&score<=10) 
+		{ 
+			msg3.innerHTML="Come on," +res+ ","+" you can do better than that! your score is okay..."
+		}
+	else if (score>10 ) 
+		{ 
+			msg3.innerHTML= "you better quit now!" +" " +res+ ","+"your score is garbage."
+		}
+	}
+
+
+
+
+function endGame()
+{ 
+	document.getElementById("s1").innerHTML = "100"; 
+	document.getElementById("s2").innerHTML = "100";
+	document.getElementById("s3").innerHTML = "100"; 
+	document.getElementById("currentScore").innerHTML= "Current Score: " + "100"; 
+	document.getElementById("avgScore").innerHTML="Current Average: " + "0";
+	document.getElementById("gameMsg").innerHTML = "Guess a number between 1-100"; 
+	document.getElementById("gamemsg2").innerHTML = "";
+	document.getElementById("msg3").innerHTML = "";
+    
+    
+    //to be implemented: sets score to 100, updates average, and resets the game 
+}
+function updateAvg()
+{		
+		
+		var avg = 0, total=0 
+		for(var i=0; i < scoreList.length;i++) {
+			total += scoreList[i];
+		}
+		var avg = total/scoreList.length;
+	document.getElementById("avgScore").innerHTML = "Average Score: " + avg;
+	
+	
+	//to be implemented: updates the average score. Hint: use a for loop, the array of scores, and the length of the array 
+}
+function resetStats()
+{
+	startGame();
+	document.getElementById("s1").innerHTML = "100"; 
+	document.getElementById("s2").innerHTML = "100";
+	document.getElementById("s3").innerHTML = "100";
+}
+function updateScores()//to be implemented: prints the three best scores (lowest number in this game) 
+{
+	
+	document.getElementById("s1").innerHTML = scoreList[0];
+	
+	 scoreList.sort(function(a, b){return b-a});
+ 
+	if (scoreList[0] != undefined) {
+		document.getElementById("s1").innerHTML = scoreList[0]
+	}
+	else { 
+	document.getElementById("s1").innerHTML = "100";
+	}
+	
+	if (scoreList[1] != undefined) {
+		document.getElementById("s2").innerHTML = scoreList[1]
+	}
+	else {
+		document.getElementById("s2").innerHTML = "100";
+	}
+	
+	if (scoreList[2]!=undefined) {
+		document.getElementById("s3").innerHTML = scoreList[2] 
+	} 
+	else { 
+	document.getElementById("s3").innerHTML = "100";
+	}
+	} 
+
+</script>
+</head>
+<body onload="startGame()">  
+<!-- To be implemented later -->
+<h3 id="gameMsg">Guess a number between 1-100</h3> 
+<h2 id="gamemsg2"> </h2> 
+<h5 id="msg3"> </h5>
+<input type="text" id="guess" onfocus="document.getElementById('guess').value=''" /><br /><br />
+<button type="button" onclick="playGame()">Make Your Guess</button>
+<button type="button" onclick="endGame()">I give up!</button><!-- to be implemented: ends current game and gives user a score of 100. Should update average score -->
+<button type="button" ondblclick="resetStats()">Double Click to Reset Stats</button>
+<h3>Game Stats:</h3>
+<ul>
+<li id="currentScore" />Current Score:
+<li id="avgScore" />Average Score:  <!-- to be implemented --> 
+</ul>
+
+<h3>Top 3 Scores:</h3>
+<ol>
+<li id="s1" />100  <!-- to be implemented -->
+<li id="s2" />100  <!-- to be implemented -->
+<li id="s3" />100  <!-- to be implemented -->
+</ol>
+
+<h4 id="todaysDate"/>Today's date and time: 
+<h4 id="timer"/>Round Timer!! 
+
+</body>
+</html>
